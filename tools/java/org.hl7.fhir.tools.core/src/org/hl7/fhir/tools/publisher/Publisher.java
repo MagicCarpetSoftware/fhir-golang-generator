@@ -218,6 +218,7 @@ import org.hl7.fhir.tools.implementations.XMLToolsGenerator;
 import org.hl7.fhir.tools.implementations.csharp.CSharpGenerator;
 import org.hl7.fhir.tools.implementations.delphi.DelphiGenerator;
 import org.hl7.fhir.tools.implementations.go.GoGenerator;
+import org.hl7.fhir.tools.implementations.ember.EmberGenerator;
 import org.hl7.fhir.tools.implementations.java.JavaGenerator;
 import org.hl7.fhir.tools.implementations.javascript.JavaScriptGenerator;
 import org.hl7.fhir.tools.publisher.ExampleInspector.EValidationFailed;
@@ -649,7 +650,7 @@ public class Publisher implements URIResolver, SectionNumberer {
           e2.printStackTrace();
         }
       }
-      if (buildFlags.containsKey("all") && !buildFlags.get("all")) {
+      if (!buildFlags.get("all")) {
         page.log("This was a Partial Build", LogMessageType.Process);
         CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
         for (String n : buildFlags.keySet())
@@ -1657,6 +1658,7 @@ public class Publisher implements URIResolver, SectionNumberer {
     page.getReferenceImplementations().add(new JavaScriptGenerator());
 //    page.getReferenceImplementations().add(new EMFGenerator());
     page.getReferenceImplementations().add(new GoGenerator());
+    page.getReferenceImplementations().add(new EmberGenerator());
 
     // page.getReferenceImplementations().add(new ECoreOclGenerator());
   }
@@ -2127,7 +2129,7 @@ public class Publisher implements URIResolver, SectionNumberer {
         }
       }
     }
-
+    System.exit(0);
     page.log("Produce Schematrons", LogMessageType.Process);
     for (String rname : page.getDefinitions().sortedResourceNames()) {
       ResourceDefn r = page.getDefinitions().getResources().get(rname);
@@ -4748,6 +4750,7 @@ public class Publisher implements URIResolver, SectionNumberer {
             throw new Exception("Unable to determine resource name - profile mismatch "+resourceName+"/"+pack.getProfiles().get(i).getDefn().getName());
       }
     }
+
     ImplementationGuideDefn ig = page.getDefinitions().getIgs().get(pack.getCategory());
     String prefix = (ig == null || ig.isCore()) ? "" : ig.getCode()+File.separator;
 
